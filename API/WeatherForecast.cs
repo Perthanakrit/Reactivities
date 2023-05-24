@@ -1,7 +1,10 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace API;
 
 public class WeatherForecast
 {
+    [Key]
     public DateOnly Date { get; set; }
 
     public int TemperatureC { get; set; }
