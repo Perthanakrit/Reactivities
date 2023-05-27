@@ -1,5 +1,5 @@
 import React from "react";
-import { Activity } from "../models/activity";
+import { Activity } from "../../App/models/activity";
 import { Button, Card, Image } from "semantic-ui-react";
 
 interface Props {
@@ -8,7 +8,11 @@ interface Props {
   openForm: (id: string) => void;
 }
 
-export default function ActivityDetails({ activity, cancelSelectActivity, openForm }: Props) {
+export default function ActivityDetails({
+  activity,
+  cancelSelectActivity,
+  openForm,
+}: Props) {
   return (
     <Card>
       <Image src={`/assets/categoryImages/${activity.category}.jpg`} />
