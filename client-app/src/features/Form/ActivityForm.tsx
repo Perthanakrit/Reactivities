@@ -1,16 +1,22 @@
-import React, { ChangeEvent, useState } from "react";
+import React, { ChangeEvent, useEffect, useState } from "react";
 import { Button, Form, Segment } from "semantic-ui-react";
 import { useStore } from "../../App/stores/store";
 import { observer } from "mobx-react-lite";
-
-
+import { useParams, useNavigate, Link } from "react-router-dom";
+import { Activity } from "../../App/models/activity";
+import LoadingComponent from "../../App/layout/LoadingComponent";
+import {v4 as uudi} from "uuid";
 
 export default observer(function ActivityForm() {
 
   const { activityStore } = useStore();
-  const {selectedActivity, closeForm, crateActivity, updateActivity, loading, deleting} = activityStore;
+  const { crateActivity, updateActivity, loading, loadActivity, loadingInitial, deleting} = activityStore;
 
-  const intialState = selectedActivity ?? {
+  const {id} = useParams();
+
+  const navigate = useNavigate();
+
+  const [activity, setActivity] = useState<Activity>({
     id: "",
     title: "",
     category: "",
@@ -18,12 +24,21 @@ export default observer(function ActivityForm() {
     date: "",
     city: "",
     venue: "",
-  };
+  });
 
-  const [activity, setActivity] = useState(intialState);
+  useEffect (() => {
+    if (id) loadActivity(id).then(activity => setActivity(activity!));
+  }, [id, loadActivity]);
 
   function handleSubmit() {
-    (activity.id) ? updateActivity(activity) : crateActivity(activity);
+    if (!activity.id) {
+      activity.id = uudi();
+      crateActivity(activity).then(() => navigate(`/activities/${activity.id}`));
+    } else {
+      updateActivity(activity).then(() =>
+        navigate(`/activities/${activity.id}`)
+      );;
+    }
   }
 
   function handleInputChange(
@@ -36,6 +51,8 @@ export default observer(function ActivityForm() {
       [name]: value,
     });
   }
+
+  if (loadingInitial) return <LoadingComponent content="Loading activity..."/>
 
   return (
     <Segment clearing>
@@ -86,7 +103,7 @@ export default observer(function ActivityForm() {
           content="Submit"
         />
         <Button
-          onClick={closeForm}
+          as={ Link} to="/activities"
           floated="right"
           type="button"
           content="Cancel"
