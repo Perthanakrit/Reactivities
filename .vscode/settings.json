@@ -1,5 +1,6 @@
 {
-    "workbench.colorCustomizations":{
+    "workbench.colorCustomizations": {
         "tab.activeBorder": "#33b1fff7"
-    }
+    },
+    "dotnet.defaultSolution": "Reactivities.sln"
 }

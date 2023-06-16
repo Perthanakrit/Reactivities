@@ -3,9 +3,8 @@ import React from "react";
 import { useStore } from "../../App/stores/store";
 import { Container, Header, Segment } from "semantic-ui-react";
 
-type Props = {};
 
-export default observer(function severError() {
+export default observer(function SeverError() {
   const { commonStore } = useStore();
 
   return (
