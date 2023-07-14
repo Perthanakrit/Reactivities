@@ -44,19 +44,21 @@ namespace API.Controllers
             return Unauthorized();
         }
 
-        [AllowAnonymous]
+        //[AllowAnonymous]
         [HttpPost("register")]
         public async Task<ActionResult<UserDTO>> Register(RegiesterDto regiesterDto)
         {
             if (await _userManager.Users.AnyAsync(u => u.UserName == regiesterDto.UserName))
             {
-                return BadRequest("Username is already taken");
+                ModelState.AddModelError("username", "Username is taken");
+                return ValidationProblem();
             }
 
             if (await _userManager.Users.AnyAsync(u => u.Email == regiesterDto.Email))
             {
-                return BadRequest("Email is already taken");
-            } 
+                ModelState.AddModelError("gmail", "Gmail is taken");
+                return ValidationProblem();
+            }
 
             var user = new AppUser
             {
@@ -74,7 +76,7 @@ namespace API.Controllers
 
         [Authorize]
         [HttpGet]
-        public async Task <ActionResult<UserDTO>> GetCurrentUser()
+        public async Task<ActionResult<UserDTO>> GetCurrentUser()
         {
             var user = await _userManager.FindByEmailAsync(User.FindFirstValue(ClaimTypes.Email));
 
