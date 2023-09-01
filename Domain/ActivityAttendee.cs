@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Domain
 {
-    [PrimaryKey(nameof(AppUserId))]
+    //[PrimaryKey(nameof(AppUserId))]
     public class ActivityAttendee
     {
         public string AppUserId { get; set; }
