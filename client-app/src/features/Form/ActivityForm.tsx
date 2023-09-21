@@ -1,12 +1,12 @@
-import React, {useEffect, useState } from "react";
-import { Button, Header, Label, Segment } from "semantic-ui-react";
+import { useEffect, useState } from "react";
+import { Button, Header, Segment } from "semantic-ui-react";
 import { useStore } from "../../App/stores/store";
 import { observer } from "mobx-react-lite";
 import { useParams, useNavigate, Link } from "react-router-dom";
-import { Activity } from "../../App/models/activity";
+import { ActivityFormValues } from "../../App/models/activity";
 import LoadingComponent from "../../App/layout/LoadingComponent";
-import {v4 as uudi} from "uuid";
-import { ErrorMessage, Form, Formik } from "formik";
+import { v4 as uudi } from "uuid";
+import { Form, Formik } from "formik";
 import * as Yup from "yup";
 import MyTextInput from "../../App/common/form/MyTextInput";
 import MyTextArea from "../../App/common/form/MyTextArea";
@@ -15,25 +15,26 @@ import { categoryOptions } from "../../App/common/options/categoryOptions";
 import MyDateInput from "../../App/common/form/MyDateInput";
 
 export default observer(function ActivityForm() {
-
   const { activityStore } = useStore();
-  const { crateActivity, updateActivity, loading, loadActivity, loadingInitial, deleting} = activityStore;
+  const {
+    crateActivity,
+    updateActivity,
+    loading,
+    loadActivity,
+    loadingInitial,
+    deleting,
+  } = activityStore;
 
-  const {id} = useParams();
+  const { id } = useParams<{ id: string }>();
 
   const navigate = useNavigate();
 
-  const [activity, setActivity] = useState<Activity>({
-    id: "",
-    title: "",
-    category: "",
-    description: "",
-    date: null,
-    city: "",
-    venue: "",
-  });
+  const [activity, setActivity] = useState<ActivityFormValues>(
+    new ActivityFormValues()
+  );
 
   const validationSchema = Yup.object({
+    // Yup is a library for validation in forms
     title: Yup.string().required("The activity tittle is required"),
     description: Yup.string().required("The activity tittle is required"),
     category: Yup.string().required("The activity category is required"),
@@ -42,23 +43,32 @@ export default observer(function ActivityForm() {
     city: Yup.string().required(),
   });
 
-  useEffect (() => {
-    if (id) loadActivity(id).then(activity => setActivity(activity!));
+  useEffect(() => {
+    if (id) {
+      loadActivity(id).then((activity: any) => {
+        setActivity(new ActivityFormValues(activity));
+        // console.log(activity);
+      });
+    }
   }, [id, loadActivity]);
 
-  function handleFormSubmit(activity: Activity) {
-    if (!activity.id) {
-      activity.id = uudi();
-      crateActivity(activity).then(() => navigate(`/activities/${activity.id}`));
-    } else {
-      updateActivity(activity).then(() =>
+  function handleFormSubmit(activity: ActivityFormValues) {
+    if (activity.id) {
+      let newActivity = {
+        ...activity,
+        id: uudi(),
+      };
+      crateActivity(newActivity).then(() =>
         navigate(`/activities/${activity.id}`)
-      );;
+      );
+    } else {
+      updateActivity(activity).then(() => {
+        navigate(`/activities/${activity.id}`);
+      });
     }
   }
 
-
-  if (loadingInitial) return <LoadingComponent content="Loading activity..."/>
+  if (loadingInitial) return <LoadingComponent content="Loading activity..." />;
 
   return (
     <Segment clearing>
@@ -93,7 +103,7 @@ export default observer(function ActivityForm() {
 
             <Button
               disabled={isSubmitting || !dirty || !isValid}
-              loading={loading}
+              loading={isSubmitting}
               floated="right"
               positive
               type="submit"
@@ -111,4 +121,4 @@ export default observer(function ActivityForm() {
       </Formik>
     </Segment>
   );
-})
+});

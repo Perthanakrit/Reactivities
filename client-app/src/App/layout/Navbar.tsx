@@ -30,12 +30,12 @@ export default observer(function NavBar() {
           />
         </Menu.Item>
         <Menu.Item position="right">
-          <Image src={user?.imageg || "/assests/user.png"} />
+          <Image src={user?.image || "/assests/user.png"} />
           <Dropdown position="pop left" text={user?.displayName}>
             <Dropdown.Menu>
               <Dropdown.Item
                 as={Link}
-                to={`/profile/${user?.usernames}`}
+                to={`/profile/${user?.userName}`}
                 text="My Profile"
                 icon="user"
               />

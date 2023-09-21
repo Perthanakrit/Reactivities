@@ -3,7 +3,7 @@ import { Grid } from "semantic-ui-react";
 import { useStore } from "../../App/stores/store";
 import LoadingComponent from "../../App/layout/LoadingComponent";
 import { observer } from "mobx-react-lite";
-import {useParams} from"react-router-dom";
+import { useParams } from "react-router-dom";
 import ActivityDetailedHeader from "./ActivityDetailedHeader";
 import ActivityDetailedInfo from "./ActivityDetailedInfo";
 import ActivityDetailedChat from "./ActivityDetailedChat";
@@ -32,7 +32,7 @@ export default observer(function ActivityDetails() {
         <ActivityDetailedChat />
       </Grid.Column>
       <Grid.Column width={6}>
-        <ActivityDetailedSidebar />
+        <ActivityDetailedSidebar activity={activity} />
       </Grid.Column>
     </Grid>
   );
