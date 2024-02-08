@@ -16,5 +16,6 @@ namespace Domain
         public string Venue { get; set; }
         public bool IsCancelled { get; set; }
         public ICollection<ActivityAttendee> Attendees { get; set; } = new List<ActivityAttendee>(); // This is the data we want to send to the API
+        public ICollection<Comment> Comments { get; set; } = new List<Comment>(); // This is the data we want to send to the API
     }
 }
